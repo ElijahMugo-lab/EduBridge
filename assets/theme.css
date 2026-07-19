@@ -1,0 +1,100 @@
+/* EduBridge shared design tokens and base styles.
+   Loaded by index.html and app.html; no build step.
+   Brand: monochrome (off-black / off-white) with one warm amber accent.
+   --accent is for fills (always paired with --on-accent text);
+   --clay / --sage hold the text-safe accent per theme. */
+
+:root {
+  --bg: #F9FAFB;
+  --bg-soft: #F4F6F8;
+  --surface: #FFFFFF;
+  --surface-2: #EEF1F4;
+  --ink: #1A1C1F;
+  --ink-soft: #5A626C;
+  --line: rgba(26,28,31,0.14);
+  --line-soft: rgba(26,28,31,0.08);
+  --forest: #1A1D21;
+  --forest-deep: #0C0E10;
+  --sage: #8F5F00;
+  --clay: #7D5300;
+  --accent: #F0B429;
+  --on-accent: #0B0C0B;
+  --error: #B3261E;
+  --on-dark: #F5F6F8;
+  --on-dark-soft: rgba(245,246,248,0.65);
+  --shadow-sm: 0 1px 6px rgba(15,18,22,0.05);
+  --shadow-md: 0 8px 28px rgba(15,18,22,0.08);
+  --shadow-lg: 0 24px 64px rgba(15,18,22,0.14);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --font-mono: 'Fragment Mono', ui-monospace, monospace;
+}
+[data-theme="dark"] {
+  --bg: #0C0E10;
+  --bg-soft: #111417;
+  --surface: #14171A;
+  --surface-2: #1B1F24;
+  --ink: #EFF1F4;
+  --ink-soft: #9AA2AC;
+  --line: rgba(239,241,244,0.14);
+  --line-soft: rgba(239,241,244,0.08);
+  --forest: #262B31;
+  --forest-deep: #16191D;
+  --sage: #F0B429;
+  --clay: #F0B429;
+  --error: #FF6B6B;
+  --shadow-sm: 0 2px 12px rgba(0,0,0,0.35);
+  --shadow-md: 0 12px 40px rgba(0,0,0,0.45);
+  --shadow-lg: 0 32px 80px rgba(0,0,0,0.6);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background: var(--bg); color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+img { display: block; max-width: 100%; }
+button { font-family: inherit; cursor: pointer; }
+a { color: inherit; }
+::selection { background: var(--accent); color: var(--on-accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ph, .ph-fill { line-height: 1; }
+.serif { font-weight: 700; }
+
+/* Theme toggle switch (shared by both pages) */
+.theme-toggle {
+  position: relative; width: 58px; height: 32px; flex-shrink: 0;
+  border-radius: 100px; border: 1px solid var(--line);
+  background: var(--surface-2);
+  transition: background 0.35s, border-color 0.35s;
+}
+.theme-toggle:hover { border-color: var(--sage); }
+.theme-toggle .knob {
+  position: absolute; top: 3px; left: 3px; width: 24px; height: 24px;
+  border-radius: 50%; background: var(--surface);
+  display: grid; place-items: center; font-size: 0.8rem; color: var(--clay);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1), background 0.35s, color 0.35s;
+}
+[data-theme="dark"] .theme-toggle { background: var(--forest-deep); }
+[data-theme="dark"] .theme-toggle .knob {
+  transform: translateX(26px); background: var(--accent); color: var(--on-accent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  body, .theme-toggle, .theme-toggle .knob { transition: none; }
+}
+
+/* Toasts */
+.toasts { position: fixed; bottom: 24px; right: 24px; z-index: 300; display: flex; flex-direction: column; gap: 10px; }
+.toast {
+  background: var(--forest-deep); color: var(--on-dark);
+  padding: 14px 22px; border-radius: 14px; font-size: 0.875rem; font-weight: 500;
+  box-shadow: var(--shadow-lg); max-width: 340px;
+  animation: toastIn 0.3s ease;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+.toast.hide { opacity: 0; transform: translateX(24px); transition: all 0.3s; }

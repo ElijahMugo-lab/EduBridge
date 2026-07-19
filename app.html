@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="EduBridge app: your education network dashboard.">
+<title>EduBridge App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://images.pexels.com" crossorigin>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23121412'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-size='15' font-weight='700' fill='%23F0B429' text-anchor='middle'%3EEB%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#121412">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+  body { min-height: 100vh; }
+
+  /* ============ AUTH ============ */
+  .auth-wrap {
+    min-height: 100vh; display: none; grid-template-columns: 1fr 1fr;
+  }
+  .auth-wrap.on { display: grid; }
+  .auth-side { position: relative; overflow: hidden; background: var(--forest-deep); }
+  .auth-side img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+  .auth-side::after { content: ''; position: absolute; inset: 0; background: linear-gradient(160deg, rgba(8,9,8,0.55), rgba(11,12,11,0.88)); }
+  .auth-side-inner { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 48px; color: var(--on-dark); }
+  .auth-quote { font-size: clamp(1.4rem, 2.2vw, 2rem); font-weight: 600; line-height: 1.35; max-width: 440px; }
+  .auth-quote-who { margin-top: 18px; font-size: 0.85rem; color: var(--on-dark-soft); font-weight: 500; }
+  .auth-main { display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+  .auth-card { width: 100%; max-width: 400px; }
+  .logo { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; color: var(--ink); }
+  .logo-mark { width: 34px; height: 34px; border-radius: 10px; background: var(--forest); color: var(--on-dark); display: grid; place-items: center; font-size: 1rem; }
+  .logo em { font-style: normal; color: var(--clay); }
+  .auth-card h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; margin: 28px 0 8px; }
+  .auth-sub { color: var(--ink-soft); font-size: 0.9rem; margin-bottom: 28px; }
+  .tabs { display: flex; border: 1.5px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 24px; }
+  .tab { flex: 1; padding: 11px; text-align: center; font-size: 0.85rem; font-weight: 600; background: transparent; border: none; color: var(--ink-soft); transition: all 0.2s; }
+  .tab.active { background: var(--forest); color: var(--on-dark); }
+  label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; }
+  input[type=text], input[type=email], input[type=password], select, textarea {
+    width: 100%; padding: 12px 14px; border: 1.5px solid var(--line);
+    border-radius: 10px; background: var(--surface); color: var(--ink);
+    font-family: inherit; font-size: 0.875rem; outline: none;
+    transition: border-color 0.2s; margin-bottom: 16px;
+  }
+  textarea { resize: vertical; min-height: 90px; }
+  input:focus, select:focus, textarea:focus { border-color: var(--sage); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-err { background: color-mix(in srgb, var(--error) 10%, transparent); border: 1px solid color-mix(in srgb, var(--error) 40%, transparent); color: var(--error); font-size: 0.82rem; font-weight: 500; padding: 10px 14px; border-radius: 10px; margin-bottom: 16px; display: none; }
+  .form-err.on { display: block; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    border-radius: 100px; font-weight: 600; font-size: 0.9rem;
+    padding: 12px 26px; border: none; transition: all 0.25s ease;
+    text-decoration: none; white-space: nowrap;
+  }
+  .btn-primary { background: var(--accent); color: var(--on-accent); box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 30%, transparent); }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-dark { background: var(--forest); color: var(--on-dark); }
+  .btn-dark:hover { background: var(--forest-deep); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+  .btn-ghost:hover { border-color: var(--forest); }
+  .btn-full { width: 100%; padding: 14px; border-radius: var(--radius-sm); }
+  .auth-foot { text-align: center; font-size: 0.8rem; color: var(--ink-soft); margin-top: 20px; }
+  .auth-foot a { color: var(--clay); font-weight: 600; text-decoration: none; cursor: pointer; }
+
+  /* ============ APP SHELL ============ */
+  .app { display: none; min-height: 100vh; }
+  .app.on { display: flex; }
+  .side {
+    width: 250px; flex-shrink: 0; position: sticky; top: 0; height: 100vh;
+    border-right: 1px solid var(--line-soft); background: var(--surface);
+    display: flex; flex-direction: column; padding: 24px 16px;
+  }
+  .side .logo { padding: 0 12px 24px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px; width: 100%;
+    padding: 12px 14px; border-radius: var(--radius-sm); border: none;
+    background: transparent; color: var(--ink-soft); font-size: 0.9rem; font-weight: 500;
+    transition: all 0.15s; text-align: left; margin-bottom: 2px; position: relative;
+  }
+  .nav-item:hover { background: var(--surface-2); color: var(--ink); }
+  .nav-item.active { background: var(--forest); color: var(--on-dark); font-weight: 600; }
+  .nav-item .nbadge {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    background: var(--accent); color: var(--on-accent); font-size: 0.65rem; font-weight: 700;
+    min-width: 18px; height: 18px; border-radius: 100px; display: grid; place-items: center; padding: 0 5px;
+  }
+  .side-foot { margin-top: auto; border-top: 1px solid var(--line-soft); padding-top: 14px; }
+  .side-me { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); cursor: pointer; transition: background 0.15s; }
+  .side-me:hover { background: var(--surface-2); }
+  .side-me b { font-size: 0.85rem; display: block; }
+  .side-me small { font-size: 0.72rem; color: var(--ink-soft); }
+  .avatar {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    display: grid; place-items: center; font-weight: 700; font-size: 0.9rem;
+    color: #fff; overflow: hidden; user-select: none;
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .avatar.sm { width: 32px; height: 32px; font-size: 0.75rem; }
+  .avatar.lg { width: 72px; height: 72px; font-size: 1.6rem; }
+
+  .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 18px 32px; border-bottom: 1px solid var(--line-soft);
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 50;
+  }
+  .topbar h1 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.01em; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .icon-btn {
+    width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line);
+    background: var(--surface); display: grid; place-items: center; font-size: 1rem;
+    transition: all 0.2s;
+  }
+  .icon-btn:hover { border-color: var(--sage); }
+  .content { padding: 28px 32px 96px; max-width: 1060px; width: 100%; margin: 0 auto; }
+  .view { display: none; }
+  .view.on { display: block; animation: viewIn 0.3s ease; }
+  @keyframes viewIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ============ HOME ============ */
+  .hi-card {
+    background: linear-gradient(120deg, var(--forest-deep), var(--forest));
+    color: var(--on-dark); border-radius: var(--radius); padding: 32px;
+    display: flex; justify-content: space-between; align-items: center; gap: 24px;
+    margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .hi-card h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
+  .hi-card p { color: var(--on-dark-soft); font-size: 0.9rem; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+  .kpi { background: var(--surface); border: 1px solid var(--line-soft); border-radius: var(--radius); padding: 20px; }
+  .kpi b { font-size: 1.7rem; font-weight: 800; display: block; }
+  .kpi span { font-size: 0.78rem; color: var(--ink-soft); }
+  .home-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; align-items: start; }
+  .panel { background: var(--surface); border: 1px solid var(--line-soft); border-radius: var(--radius); padding: 24px; }
+  .panel h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; }
+  .feed-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line-soft); font-size: 0.85rem; }
+  .feed-item:last-child { border-bottom: none; }
+  .feed-item .t { color: var(--ink-soft); font-size: 0.72rem; margin-top: 3px; }
+  .sugg { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
+  .sugg-info { flex: 1; min-width: 0; }
+  .sugg-info b { font-size: 0.85rem; display: block; }
+  .sugg-info small { font-size: 0.72rem; color: var(--ink-soft); }
+  .btn-mini { padding: 7px 16px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; border: 1.5px solid var(--forest); background: transparent; color: var(--ink); transition: all 0.2s; }
+  .btn-mini:hover, .btn-mini.on { background: var(--forest); color: var(--on-dark); }
+
+  /* ============ DIRECTORY ============ */
+  .toolrow { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+  .search-wrap { position: relative; flex: 1; min-width: 220px; }
+  .search-wrap svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: var(--ink-soft); }
+  .search-input {
+    width: 100%; padding: 12px 16px 12px 42px; margin: 0;
+    border: 1.5px solid var(--line); border-radius: 100px;
+    background: var(--surface); color: var(--ink); font-size: 0.875rem;
+  }
+  .chip { padding: 9px 18px; border-radius: 100px; font-size: 0.8rem; font-weight: 600; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink-soft); transition: all 0.2s; }
+  .chip:hover { border-color: var(--sage); color: var(--ink); }
+  .chip.active { background: var(--forest); border-color: var(--forest); color: var(--on-dark); }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .t-card { background: var(--surface); border: 1px solid var(--line-soft); border-radius: var(--radius); overflow: hidden; transition: transform 0.25s, box-shadow 0.25s; }
+  .t-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .t-photo { position: relative; }
+  .t-photo img { width: 100%; aspect-ratio: 1/0.85; object-fit: cover; background: var(--surface-2); }
+  .t-badge { position: absolute; bottom: 10px; left: 10px; background: rgba(16,22,19,0.72); color: #fff; backdrop-filter: blur(6px); font-size: 0.68rem; font-weight: 600; padding: 4px 11px; border-radius: 100px; }
+  .t-body { padding: 16px; }
+  .t-name { font-size: 1rem; font-weight: 600; }
+  .t-role { font-size: 0.75rem; color: var(--sage); font-weight: 600; margin: 2px 0 8px; }
+  .tag { display: inline-block; background: var(--surface-2); border: 1px solid var(--line-soft); color: var(--ink-soft); font-size: 0.68rem; font-weight: 600; padding: 3px 9px; border-radius: 100px; margin: 0 4px 4px 0; }
+  .t-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .t-actions .btn-mini { flex: 1; padding: 9px; }
+  .empty { text-align: center; padding: 56px 20px; color: var(--ink-soft); }
+  .empty .serif { font-size: 1.3rem; color: var(--ink); margin-bottom: 6px; }
+
+  /* ============ MESSAGES ============ */
+  .chat-wrap { display: flex; background: var(--surface); border: 1px solid var(--line-soft); border-radius: var(--radius); overflow: hidden; height: calc(100vh - 200px); min-height: 420px; }
+  .chat-side { width: 280px; flex-shrink: 0; border-right: 1px solid var(--line-soft); overflow-y: auto; }
+  .chat-side-hdr { padding: 18px 20px; font-weight: 600; border-bottom: 1px solid var(--line-soft); display: flex; justify-content: space-between; align-items: center; }
+  .thread { padding: 13px 18px; display: flex; align-items: center; gap: 11px; cursor: pointer; transition: background 0.15s; }
+  .thread:hover, .thread.active { background: var(--surface-2); }
+  .thread-info { flex: 1; min-width: 0; }
+  .thread-info b { font-size: 0.83rem; display: block; }
+  .thread-info small { font-size: 0.73rem; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+  .thread .dot { width: 9px; height: 9px; background: var(--accent); border: 1px solid var(--line); border-radius: 50%; flex-shrink: 0; }
+  .chat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .chat-top { padding: 14px 22px; border-bottom: 1px solid var(--line-soft); display: flex; align-items: center; gap: 11px; }
+  .chat-top b { font-size: 0.95rem; display: block; }
+  .chat-top small { font-size: 0.72rem; color: var(--sage); font-weight: 600; }
+  .chat-body { flex: 1; padding: 22px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+  .bubble { max-width: 74%; padding: 11px 15px; border-radius: 16px; font-size: 0.86rem; line-height: 1.55; animation: bubbleIn 0.25s ease; }
+  @keyframes bubbleIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .bubble.in { background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: 4px 16px 16px 16px; }
+  .bubble.out { background: var(--forest); color: var(--on-dark); margin-left: auto; border-radius: 16px 4px 16px 16px; }
+  .bubble .bt { display: block; font-size: 0.65rem; opacity: 0.6; margin-top: 4px; }
+  .typing { display: inline-flex; gap: 4px; padding: 13px 15px; }
+  .typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-soft); animation: blink 1.2s infinite; }
+  .typing i:nth-child(2) { animation-delay: 0.2s; } .typing i:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%,80%,100% { opacity: 0.25; } 40% { opacity: 1; } }
+  .chat-inbar { padding: 14px 18px; border-top: 1px solid var(--line-soft); display: flex; gap: 10px; }
+  .chat-input { flex: 1; padding: 11px 17px; margin: 0; border: 1.5px solid var(--line); border-radius: 100px; background: var(--bg); color: var(--ink); font-size: 0.86rem; }
+  .chat-send { width: 42px; height: 42px; background: var(--forest); color: var(--on-dark); border: none; border-radius: 50%; font-size: 1rem; transition: all 0.2s; flex-shrink: 0; }
+  .chat-send:hover { background: var(--accent); color: var(--on-accent); }
+  .chat-empty { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; color: var(--ink-soft); font-size: 0.9rem; }
+
+  /* ============ RESOURCES ============ */
+  .res-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .res-card { background: var(--surface); border: 1px solid var(--line-soft); border-radius: var(--radius); overflow: hidden; transition: transform 0.25s, box-shadow 0.25s; display: flex; flex-direction: column; }
+  .res-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .res-card img { width: 100%; height: 130px; object-fit: cover; background: var(--surface-2); }
+  .res-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
+  .res-type { font-family: var(--font-mono); font-size: 0.62rem; color: var(--clay); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 400; }
+  .res-title { font-size: 1rem; font-weight: 600; margin: 7px 0; }
+  .res-desc { font-size: 0.8rem; color: var(--ink-soft); line-height: 1.55; flex: 1; }
+  .res-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line-soft); font-size: 0.72rem; color: var(--ink-soft); }
+  .res-dl-btn { border: none; background: none; color: var(--sage); font-weight: 700; font-size: 0.75rem; padding: 0; }
+  .res-dl-btn:hover { color: var(--clay); }
+
+  /* ============ JOBS ============ */
+  .job-list { display: flex; flex-direction: column; gap: 12px; }
+  .job-item { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 16px; padding: 20px 24px; transition: all 0.2s; }
+  .job-item:hover { border-color: var(--sage); }
+  .job-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
+  .job-ic { width: 46px; height: 46px; border-radius: 13px; background: var(--surface-2); border: 1px solid var(--line-soft); display: grid; place-items: center; font-size: 1.2rem; flex-shrink: 0; }
+  .job-title { font-size: 0.98rem; font-weight: 600; }
+  .job-meta { font-size: 0.76rem; color: var(--ink-soft); margin-top: 3px; }
+  .job-meta .loc { color: var(--sage); font-weight: 600; }
+  .job-right { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
+  .job-pay { font-weight: 700; font-size: 0.83rem; text-align: right; }
+  .job-pay small { display: block; font-weight: 500; color: var(--ink-soft); font-size: 0.7rem; }
+
+  /* ============ PROFILE ============ */
+  .prof-head { display: flex; align-items: center; gap: 20px; background: var(--surface); border: 1px solid var(--line-soft); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; flex-wrap: wrap; }
+  .prof-head-info { flex: 1; min-width: 200px; }
+  .prof-head-info h2 { font-size: 1.5rem; font-weight: 800; }
+  .prof-head-info p { color: var(--ink-soft); font-size: 0.85rem; margin-top: 4px; }
+  .prof-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+
+  /* ============ VERIFICATION (mobile-first: everything wraps and stays fluid) ============ */
+  .vchips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .vchip {
+    font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 4px 10px; border-radius: 100px; display: inline-flex; gap: 5px; align-items: center; white-space: nowrap;
+  }
+  .vchip i { font-size: 0.8rem; }
+  .vchip.ok { background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--clay); }
+  .vchip.pend, .vchip.none { background: var(--surface-2); color: var(--ink-soft); }
+  .vblock { padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--line-soft); }
+  .vblock:first-child { padding-top: 0; margin-top: 0; border-top: none; }
+  .vblock h4 { font-size: 0.88rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .vhint { font-size: 0.75rem; color: var(--ink-soft); line-height: 1.55; margin-top: 8px; }
+  .vrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+  .vdoc { display: flex; gap: 12px; align-items: center; background: var(--surface-2); border-radius: var(--radius-sm); padding: 10px 12px; min-width: 0; }
+  .vdoc img { width: 46px; height: 46px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+  .vdoc .ic-doc { width: 46px; height: 46px; display: grid; place-items: center; background: var(--surface); border-radius: 8px; font-size: 1.3rem; color: var(--clay); flex-shrink: 0; }
+  .vdoc-info { flex: 1; min-width: 0; }
+  .vdoc-info b { font-size: 0.8rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .vsize { font-family: var(--font-mono); font-size: 0.68rem; color: var(--sage); }
+  a.btn-mini, span.btn-mini { text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+  .btn-file { position: relative; overflow: hidden; cursor: pointer; }
+  .btn-file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .photo-row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+
+  /* ============ MODAL / TOAST ============ */
+  .modal-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(12,21,17,0.72); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border-radius: 24px; padding: 36px; max-width: 460px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); border: 1px solid var(--line-soft); animation: modalIn 0.3s ease; }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.96) translateY(10px); } to { opacity: 1; transform: none; } }
+  .modal h3 { font-size: 1.4rem; font-weight: 600; margin-bottom: 6px; }
+  .modal .modal-sub { color: var(--ink-soft); font-size: 0.85rem; margin-bottom: 22px; }
+  .modal-close { float: right; background: none; border: none; font-size: 1.2rem; color: var(--ink-soft); line-height: 1; }
+
+  /* ============ MOBILE ============ */
+  .bottom-nav { display: none; }
+  @media (max-width: 900px) {
+    .side { display: none; }
+    .content { padding: 20px 16px 110px; }
+    .topbar { padding: 14px 16px; }
+    .cards, .res-cards { grid-template-columns: 1fr 1fr; }
+    .kpis { grid-template-columns: 1fr 1fr; }
+    .home-grid, .prof-grid { grid-template-columns: 1fr; }
+    .auth-wrap { grid-template-columns: 1fr; }
+    .auth-side { display: none; }
+    .chat-wrap { height: calc(100vh - 210px); }
+    .chat-side { width: 110px; }
+    .thread-info { display: none; }
+    .thread { justify-content: center; }
+    .job-item { flex-direction: column; align-items: flex-start; }
+    .job-right { width: 100%; justify-content: space-between; }
+    .bottom-nav {
+      display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      backdrop-filter: blur(16px); border-top: 1px solid var(--line-soft);
+      padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+    }
+    .bnav-item { flex: 1; border: none; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.62rem; font-weight: 600; color: var(--ink-soft); padding: 6px 2px; border-radius: 10px; position: relative; }
+    .bnav-item.active { color: var(--forest); }
+    [data-theme="dark"] .bnav-item.active { color: var(--sage); }
+    .bnav-item .ic { font-size: 1.15rem; }
+    .bnav-item .nbadge { position: absolute; top: 0; right: 22%; background: var(--accent); color: var(--on-accent); font-size: 0.6rem; font-weight: 700; min-width: 16px; height: 16px; border-radius: 100px; display: grid; place-items: center; padding: 0 4px; }
+  }
+  @media (max-width: 520px) { .cards, .res-cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ================= AUTH ================= -->
+<div class="auth-wrap" id="authView">
+  <div class="auth-side">
+    <img src="https://images.pexels.com/photos/5905919/pexels-photo-5905919.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="">
+    <div class="auth-side-inner">
+      <a class="logo" href="index.html" style="color:var(--on-dark)"><span class="logo-mark"><i class="ph-fill ph-plant" aria-hidden="true"></i></span>Edu<em>Bridge</em></a>
+      <div>
+        <div class="auth-quote">"EduBridge feels like the staff room and the PTA meeting rolled into one."</div>
+        <div class="auth-quote-who">Moureen N. · Homeschooling parent, Nakuru</div>
+      </div>
+    </div>
+  </div>
+  <div class="auth-main">
+    <div class="auth-card">
+      <a class="logo" href="index.html"><span class="logo-mark"><i class="ph-fill ph-plant" aria-hidden="true"></i></span>Edu<em>Bridge</em></a>
+      <h1 id="authTitle">Welcome back</h1>
+      <p class="auth-sub" id="authSub">Sign in to your education network.</p>
+      <div class="form-err" id="authErr"></div>
+
+      <form id="loginForm" onsubmit="doLogin(event)">
+        <label>Email</label>
+        <input type="email" id="liEmail" placeholder="you@example.com" required>
+        <label>Password</label>
+        <input type="password" id="liPass" placeholder="••••••••" required>
+        <button type="submit" class="btn btn-dark btn-full">Sign in →</button>
+        <p class="auth-foot">New to EduBridge? <a onclick="showAuth('signup')">Create an account</a></p>
+      </form>
+
+      <form id="signupForm" style="display:none" onsubmit="doSignup(event)">
+        <div class="tabs">
+          <button type="button" class="tab active" data-role="Teacher" onclick="pickRole(this)">Teacher</button>
+          <button type="button" class="tab" data-role="Parent" onclick="pickRole(this)">Parent</button>
+        </div>
+        <div class="form-row">
+          <div><label>First name</label><input type="text" id="suFirst" placeholder="Sarah" required></div>
+          <div><label>Last name</label><input type="text" id="suLast" placeholder="Maina" required></div>
+        </div>
+        <label>Email</label>
+        <input type="email" id="suEmail" placeholder="you@example.com" required>
+        <label>Password</label>
+        <input type="password" id="suPass" placeholder="At least 8 characters" minlength="8" required>
+        <button type="submit" class="btn btn-primary btn-full">Create free account →</button>
+        <p class="auth-foot">Already a member? <a onclick="showAuth('login')">Sign in</a></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div class="app" id="appView">
+  <aside class="side">
+    <a class="logo" href="index.html"><span class="logo-mark"><i class="ph-fill ph-plant" aria-hidden="true"></i></span>Edu<em>Bridge</em></a>
+    <nav id="sideNav"></nav>
+    <div class="side-foot">
+      <div class="side-me" onclick="go('profile')">
+        <div class="avatar" id="meAvatarSide"></div>
+        <div><b id="meNameSide"></b><small id="meRoleSide"></small></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h1 id="viewTitle">Home</h1>
+      <div class="topbar-right">
+        <button class="theme-toggle" id="themeBtn" role="switch" aria-checked="false" aria-label="Toggle dark mode" onclick="toggleTheme()"><span class="knob"><i class="ph ph-sun" aria-hidden="true"></i></span></button>
+        <button class="icon-btn" onclick="logout()" title="Sign out" aria-label="Sign out"><i class="ph ph-sign-out" aria-hidden="true"></i></button>
+      </div>
+    </div>
+    <div class="content">
+
+      <!-- HOME -->
+      <section class="view" id="view-home">
+        <div class="hi-card">
+          <div>
+            <h2 id="hiName">Karibu!</h2>
+            <p id="hiSub">Here's what's happening in your network today.</p>
+          </div>
+          <button class="btn btn-primary" onclick="go('educators')">Find educators →</button>
+        </div>
+        <div class="kpis" id="kpis"></div>
+        <div class="home-grid">
+          <div class="panel">
+            <h3>Activity</h3>
+            <div id="feed"></div>
+          </div>
+          <div class="panel">
+            <h3>Suggested for you</h3>
+            <div id="suggs"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EDUCATORS -->
+      <section class="view" id="view-educators">
+        <div class="toolrow">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input class="search-input" id="dirSearch" type="text" placeholder="Search name, subject or county…" oninput="renderDirectory()">
+          </div>
+          <div id="dirFilters" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        </div>
+        <div class="cards" id="dirGrid"></div>
+        <div class="empty" id="dirEmpty" style="display:none">
+          <div class="serif">No matches found</div>
+          <p>Try a different name, subject or filter.</p>
+        </div>
+      </section>
+
+      <!-- MESSAGES -->
+      <section class="view" id="view-messages">
+        <div class="chat-wrap">
+          <div class="chat-side">
+            <div class="chat-side-hdr">Inbox</div>
+            <div id="threadList"></div>
+          </div>
+          <div class="chat-main" id="chatMain"></div>
+        </div>
+      </section>
+
+      <!-- RESOURCES -->
+      <section class="view" id="view-resources">
+        <div class="toolrow">
+          <div id="resFilters" style="display:flex;gap:8px;flex-wrap:wrap;flex:1"></div>
+          <button class="btn btn-dark" onclick="openResModal()">+ Share a resource</button>
+        </div>
+        <div class="res-cards" id="resGrid"></div>
+      </section>
+
+      <!-- JOBS -->
+      <section class="view" id="view-jobs">
+        <div class="toolrow"><div id="jobFilters" style="display:flex;gap:8px;flex-wrap:wrap"></div></div>
+        <div class="job-list" id="jobList"></div>
+      </section>
+
+      <!-- PROFILE -->
+      <section class="view" id="view-profile">
+        <div class="prof-head">
+          <div class="avatar lg" id="profAvatar"></div>
+          <div class="prof-head-info">
+            <h2 id="profName"></h2>
+            <p id="profMeta"></p>
+            <div class="vchips" id="profChips"></div>
+          </div>
+          <button class="btn btn-ghost" onclick="logout()">Sign out</button>
+        </div>
+        <div class="prof-grid">
+          <div class="panel">
+            <h3>Edit profile</h3>
+            <form onsubmit="saveProfile(event)">
+              <label>Profile photo</label>
+              <div class="photo-row">
+                <span id="pfPhotoPrev"></span>
+                <div style="min-width:0">
+                  <div class="vrow" style="margin-top:0">
+                    <span class="btn-mini btn-file">Upload photo<input type="file" accept="image/*" onchange="uploadPhoto(this)"></span>
+                    <button type="button" class="btn-mini" id="pfPhotoRemove" onclick="removePhoto()">Remove</button>
+                  </div>
+                  <p class="vhint">JPG or PNG. Compressed automatically on your device.</p>
+                </div>
+              </div>
+              <label>County</label>
+              <select id="pfCounty">
+                <option>Nairobi</option><option>Mombasa</option><option>Kisumu</option><option>Nakuru</option><option>Eldoret</option><option>Other</option>
+              </select>
+              <label id="pfSubjectsLbl">Subjects</label>
+              <input type="text" id="pfSubjects" placeholder="e.g. Maths, Science">
+              <label>Grade levels</label>
+              <select id="pfGrades">
+                <option>Pre-primary / PP1-PP2</option><option>Grades 1-3</option><option>Grades 4-6</option><option>Grades 7-9</option><option>Grades 10-12</option>
+              </select>
+              <label>About you</label>
+              <textarea id="pfBio" placeholder="Your teaching philosophy, experience, or what you're looking for…"></textarea>
+              <button type="submit" class="btn btn-dark btn-full">Save changes</button>
+            </form>
+          </div>
+          <div>
+            <div class="panel" style="margin-bottom:20px" id="verifyPanel"></div>
+            <div class="panel" style="margin-bottom:20px">
+              <h3>My connections (<span id="connCount">0</span>)</h3>
+              <div id="connList"></div>
+            </div>
+            <div class="panel">
+              <h3>My applications (<span id="appCount">0</span>)</h3>
+              <div id="appList"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- bottom nav (mobile) -->
+  <nav class="bottom-nav" id="bottomNav"></nav>
+</div>
+
+<!-- SHARE RESOURCE MODAL -->
+<div class="modal-overlay" id="resModal" onclick="if(event.target.id==='resModal')closeResModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeResModal()" aria-label="Close">✕</button>
+    <h3>Share a resource</h3>
+    <p class="modal-sub">Contribute a lesson plan, worksheet or guide to the community.</p>
+    <form onsubmit="postResource(event)">
+      <label>Title</label>
+      <input type="text" id="rTitle" placeholder="e.g. Grade 5 Fractions Worksheet Pack" required>
+      <label>Category</label>
+      <select id="rCat"><option>Lesson Plans</option><option>Teaching Guides</option><option>Worksheets</option><option>Homeschooling</option><option>Parenting Tips</option></select>
+      <label>Audience</label>
+      <select id="rBadge"><option>Grades 1-3</option><option>Grades 4-6</option><option>Grades 7-9</option><option>Grades 10-12</option><option>All grades</option><option>Parents</option></select>
+      <label>Description</label>
+      <textarea id="rDesc" placeholder="What's inside and how to use it…" required></textarea>
+      <button type="submit" class="btn btn-primary btn-full">Publish resource →</button>
+    </form>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script src="assets/shared.js"></script>
+<script>
+/* ================= SEED DATA ================= */
+const EDUCATORS = [
+  { name: 'Ms. Emma Karuri',  role: 'Maths Tutor',          type: 'Tutor',   county: 'Mombasa', tags: ['Algebra','Geometry','Gr 4-8'],  rating: 4.9, img: P(6311269, 600) },
+  { name: 'Mr. Simon Mwangi', role: 'Science Teacher',      type: 'Teacher', county: 'Nairobi', tags: ['Biology','Chemistry','Gr 7-9'], rating: 4.8, img: P(3907762, 600) },
+  { name: 'Ms. Sarah Maina',  role: 'Elementary Teacher',   type: 'Teacher', county: 'Nairobi', tags: ['Literacy','STEAM','Gr 1-3'],    rating: 5.0, img: P(11440539, 600) },
+  { name: 'Mr. David Omondi', role: 'Maths Teacher',        type: 'Teacher', county: 'Kisumu',  tags: ['Calculus','Algebra','Gr 10-12'],rating: 4.7, img: P(30544173,600) },
+  { name: 'Ms. Moureen Njeri',role: 'Homeschooling Parent', type: 'Parent',  county: 'Nakuru',  tags: ['STEM','Gr 3-6'],                rating: 4.9, img: P(36536385,600) },
+  { name: 'Mr. Brian Kip',    role: 'ICT & Coding Tutor',   type: 'Tutor',   county: 'Eldoret', tags: ['Scratch','Python','Gr 6-9'],    rating: 4.8, img: P(6146927, 600) },
+  { name: 'Ms. Achieng Odera',role: 'Languages Teacher',    type: 'Teacher', county: 'Kisumu',  tags: ['Kiswahili','English','Gr 4-8'], rating: 4.9, img: P(5905838, 600) },
+  { name: 'Mr. John Kamau',   role: 'Music & Arts Tutor',   type: 'Tutor',   county: 'Nairobi', tags: ['Piano','Creative Arts'],        rating: 4.6, img: P(19039168, 600) },
+];
+
+const SEED_RESOURCES = [
+  { id: 'r1', cat: 'Lesson Plans',    title: 'Maths for Beginners, CBC Aligned',  desc: 'A hands-on guide to teaching foundational numeracy to early learners, with printable activities.', by: 'Ms. Emma Karuri', badge: 'Grades 1-3', dl: 214, img: P(28646079, 700) },
+  { id: 'r2', cat: 'Teaching Guides', title: 'Effective Classroom Management',      desc: 'Field-tested strategies for keeping a positive, productive learning environment in large classes.', by: 'Mr. Simon Mwangi', badge: 'All grades', dl: 187, img: P(31820972, 700) },
+  { id: 'r3', cat: 'Homeschooling',   title: 'Setting Up Your Homeschool Space',    desc: 'How to create an organised, inspiring home learning corner on any budget.', by: 'Ms. Moureen Njeri', badge: 'Parents', dl: 156, img: P(6482347, 700) },
+  { id: 'r4', cat: 'Worksheets',      title: 'Grade 4 Science Experiment Pack',     desc: 'Twelve safe, low-cost experiments with worksheets, observation sheets and marking guides.', by: 'Mr. Simon Mwangi', badge: 'Grades 4-6', dl: 203, img: P(7606119, 700) },
+  { id: 'r5', cat: 'Lesson Plans',    title: 'Intro to Coding with Scratch',        desc: 'A four-week unit plan introducing computational thinking through games and storytelling.', by: 'Mr. Brian Kip', badge: 'Grades 6-9', dl: 171, img: P(5905702, 700) },
+  { id: 'r6', cat: 'Parenting Tips',  title: 'Reading Together: A Parent\'s Guide', desc: 'Simple daily routines that turn reluctant readers into book lovers, from PP1 to Grade 6.', by: 'Ms. Sarah Maina', badge: 'Parents', dl: 142, img: P(12788203, 700) },
+];
+const RES_CATS = ['All', 'Lesson Plans', 'Teaching Guides', 'Worksheets', 'Homeschooling', 'Parenting Tips'];
+const RES_IMGS = { 'Lesson Plans': P(28646079, 700), 'Teaching Guides': P(31820972, 700), 'Worksheets': P(7606119, 700), 'Homeschooling': P(6482347, 700), 'Parenting Tips': P(12788203, 700) };
+
+const JOBS = [
+  { icon: 'monitor-play', title: 'Online Maths Tutor',             loc: 'Remote',  kind: 'Part-time', pay: 'KSh 1,500-2,500', per: 'per hour' },
+  { icon: 'buildings', title: 'Elementary School Teacher',       loc: 'Nairobi', kind: 'Full-time', pay: 'KSh 55k-75k',     per: 'per month' },
+  { icon: 'flask', title: 'High School Science Teacher',     loc: 'Nairobi', kind: 'Full-time', pay: 'KSh 60k-85k',     per: 'per month' },
+  { icon: 'book-open', title: 'Online English & Literacy Tutor', loc: 'Remote',  kind: 'Flexible',  pay: 'KSh 1,200-2,000', per: 'per hour' },
+  { icon: 'globe-hemisphere-west', title: 'Middle School Social Studies',    loc: 'Nakuru',  kind: 'Full-time', pay: 'KSh 50k-65k',     per: 'per month' },
+  { icon: 'puzzle-piece', title: 'Homeschool Co-op Facilitator',    loc: 'Kisumu',  kind: 'Part-time', pay: 'KSh 30k-40k',     per: 'per month' },
+];
+const JOB_FILTERS = ['All', 'Remote', 'Full-time', 'Part-time', 'Flexible'];
+
+const REPLIES = [
+  "Thanks for reaching out! I'll get back to you within the day.",
+  "That sounds great. Let me check my schedule and confirm.",
+  "Lovely! I'll send the materials over shortly. 😊",
+  "Good question. Let me put together a proper answer for you.",
+  "Karibu! Happy to help with that.",
+  "I've shared similar resources before. I'll dig them up for you.",
+];
+const AV_COLORS = ['#1A1D21','#2C3036','#454A52','#5C636C','#22262B','#383E45'];
+
+/* ================= STORAGE ================= */
+const uid = () => 'u' + Math.random().toString(36).slice(2, 10);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+let users = store.get('users', []);
+let me = null;
+let currentView = 'home';
+let dirFilter = 'All', resFilter = 'All', jobFilter = 'All';
+let activeThread = null, replyIdx = 0;
+
+function saveUsers() {
+  const i = users.findIndex(u => u.id === me?.id);
+  if (i >= 0) users[i] = me;
+  return store.set('users', users);
+}
+
+
+
+/* ================= AUTH ================= */
+let signupRole = 'Teacher';
+function pickRole(btn) {
+  document.querySelectorAll('#signupForm .tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  signupRole = btn.dataset.role;
+}
+function showAuth(mode) {
+  document.getElementById('authErr').classList.remove('on');
+  document.getElementById('loginForm').style.display = mode === 'login' ? '' : 'none';
+  document.getElementById('signupForm').style.display = mode === 'signup' ? '' : 'none';
+  document.getElementById('authTitle').textContent = mode === 'login' ? 'Welcome back' : 'Join EduBridge';
+  document.getElementById('authSub').textContent = mode === 'login' ? 'Sign in to your education network.' : 'Create your free account in under a minute.';
+}
+function authErr(msg) {
+  const el = document.getElementById('authErr');
+  el.textContent = msg; el.classList.add('on');
+}
+function doSignup(e) {
+  e.preventDefault();
+  const email = document.getElementById('suEmail').value.trim().toLowerCase();
+  if (users.some(u => u.email === email)) return authErr('An account with this email already exists. Try signing in.');
+  const user = makeUser({
+    first: document.getElementById('suFirst').value.trim(),
+    last: document.getElementById('suLast').value.trim(),
+    email, pass: document.getElementById('suPass').value, role: signupRole,
+  });
+  users.push(user); store.set('users', users);
+  store.set('session', user.id);
+  enterApp(user, true);
+}
+function doLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('liEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('liPass').value;
+  const user = users.find(u => u.email === email);
+  if (!user || user.pass !== pass) return authErr('Email or password is incorrect.');
+  store.set('session', user.id);
+  enterApp(user, false);
+}
+function logout() {
+  store.del('session');
+  me = null;
+  document.getElementById('appView').classList.remove('on');
+  document.getElementById('authView').classList.add('on');
+  showAuth('login');
+}
+function makeUser({ first, last, email, pass, role }) {
+  return {
+    id: uid(), first, last, email, pass, role,
+    county: 'Nairobi', subjects: '', grades: 'Grades 1-3', bio: '',
+    photo: null,
+    tsc: { number: '', status: 'none', checked: null },
+    conduct: { file: null, fname: '', sizeKB: 0, origKB: 0, kind: '', status: 'none', checked: null },
+    color: AV_COLORS[(first.length + last.length) % AV_COLORS.length],
+    connections: [], applied: [], downloads: [],
+    threads: [
+      { id: 't-team', name: 'EduBridge Team', role: 'Community', img: null, color: '#1A1D21', unread: true,
+        msgs: [{ who: 'in', txt: `Karibu EduBridge, ${first}! 🌱 Start by connecting with educators near you, then you can message them right here.`, t: Date.now() }] },
+      { id: 't-sarah', name: 'Ms. Sarah Maina', role: 'Elementary Teacher', img: P(11440539, 96), unread: true,
+        msgs: [{ who: 'in', txt: "Hi! I saw you just joined. Welcome! I share literacy materials for Grades 1-3 every week. Say hello anytime.", t: Date.now() }] },
+    ],
+    joined: new Date().toISOString().slice(0, 10),
+  };
+}
+
+/* ================= APP ENTRY ================= */
+const NAV = [
+  { id: 'home',      icon: 'house', label: 'Home' },
+  { id: 'educators', icon: 'chalkboard-teacher', label: 'Educators' },
+  { id: 'messages',  icon: 'chat-circle-dots', label: 'Messages' },
+  { id: 'resources', icon: 'books', label: 'Resources' },
+  { id: 'jobs',      icon: 'briefcase', label: 'Jobs' },
+  { id: 'profile',   icon: 'user', label: 'Profile' },
+];
+const TITLES = { home: 'Home', educators: 'Find educators', messages: 'Messages', resources: 'Resource hub', jobs: 'Opportunities', profile: 'My profile' };
+
+function ensureVerifyFields(u) {
+  // accounts created before verification existed
+  if (!('photo' in u)) u.photo = null;
+  if (!u.tsc) u.tsc = { number: '', status: 'none', checked: null };
+  if (!u.conduct) u.conduct = { file: null, fname: '', sizeKB: 0, origKB: 0, kind: '', status: 'none', checked: null };
+  return u;
+}
+
+function enterApp(user, isNew) {
+  me = ensureVerifyFields(user);
+  document.getElementById('authView').classList.remove('on');
+  document.getElementById('appView').classList.add('on');
+  renderShell();
+  const deep = location.hash.slice(1);
+  go(NAV.some(n => n.id === deep) ? deep : 'home');
+  if (isNew) setTimeout(() => toast(`Welcome to EduBridge, ${me.first}! Your account is ready.`), 400);
+}
+
+function avatarHTML(t, cls = '') {
+  if (t.img) return `<div class="avatar ${cls}"><img src="${t.img}" alt="${esc(t.name || '')}"></div>`;
+  const initials = t.initials || (t.name || '?').split(' ').map(w => w[0]).slice(0, 2).join('');
+  return `<div class="avatar ${cls}" style="background:${t.color || '#1A1D21'}">${esc(initials)}</div>`;
+}
+function myAvatar(cls = '') {
+  return avatarHTML({ img: me.photo, name: myName(), color: me.color, initials: (me.first[0] || '') + (me.last[0] || '') }, cls);
+}
+function unreadCount() { return me.threads.filter(t => t.unread).length; }
+
+function renderShell() {
+  const nav = NAV.map(n => `
+    <button class="nav-item ${n.id === currentView ? 'active' : ''}" onclick="go('${n.id}')">
+      <i class="ph ph-${n.icon}" aria-hidden="true"></i> ${n.label}
+      ${n.id === 'messages' && unreadCount() ? `<span class="nbadge">${unreadCount()}</span>` : ''}
+    </button>`).join('');
+  document.getElementById('sideNav').innerHTML = nav;
+  document.getElementById('bottomNav').innerHTML = NAV.map(n => `
+    <button class="bnav-item ${n.id === currentView ? 'active' : ''}" onclick="go('${n.id}')">
+      <i class="ph ph-${n.icon} ic" aria-hidden="true"></i>${n.label}
+      ${n.id === 'messages' && unreadCount() ? `<span class="nbadge">${unreadCount()}</span>` : ''}
+    </button>`).join('');
+  document.getElementById('meAvatarSide').outerHTML = myAvatar().replace('class="avatar', 'id="meAvatarSide" class="avatar');
+  document.getElementById('meNameSide').textContent = `${me.first} ${me.last}`;
+  document.getElementById('meRoleSide').textContent = me.role;
+}
+
+function go(view) {
+  currentView = view;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+  document.getElementById('view-' + view).classList.add('on');
+  document.getElementById('viewTitle').textContent = TITLES[view];
+  renderShell();
+  ({ home: renderHome, educators: renderDirectory, messages: renderMessages, resources: renderResources, jobs: renderJobs, profile: renderProfile })[view]();
+  scrollTo(0, 0);
+}
+
+/* ================= HOME ================= */
+function renderHome() {
+  const hrs = new Date().getHours();
+  const greet = hrs < 12 ? 'Good morning' : hrs < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('hiName').textContent = `${greet}, ${me.first}!`;
+  const communityRes = store.get('resources', []);
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi"><b>${me.connections.length}</b><span>Connections</span></div>
+    <div class="kpi"><b>${unreadCount()}</b><span>Unread messages</span></div>
+    <div class="kpi"><b>${communityRes.filter(r => r.by === myName()).length}</b><span>Resources shared</span></div>
+    <div class="kpi"><b>${me.applied.length}</b><span>Applications</span></div>`;
+
+  const feed = [];
+  if (me.connections.length) feed.push({ av: EDUCATORS.find(e => e.name === me.connections[me.connections.length-1]), txt: `You connected with <b>${esc(me.connections[me.connections.length-1])}</b>`, t: 'Recently' });
+  communityRes.slice(-2).reverse().forEach(r => feed.push({ me: r.by === myName(), txt: `<b>${esc(r.by)}</b> shared “${esc(r.title)}”`, t: 'This week' }));
+  feed.push({ av: EDUCATORS[2], txt: `<b>Ms. Sarah Maina</b> shared “Reading Together: A Parent's Guide”, 142 downloads`, t: 'This week' });
+  feed.push({ av: EDUCATORS[1], txt: `<b>Mr. Simon Mwangi</b> posted a new Grade 4 science experiment pack`, t: 'This week' });
+  feed.push({ txt: `<b>3 new opportunities</b> matching “${esc(me.county)}” were posted`, t: 'This week', ic: 'briefcase' });
+  document.getElementById('feed').innerHTML = feed.map(f => `
+    <div class="feed-item">
+      ${f.av ? avatarHTML({ img: f.av.img, name: f.av.name }, 'sm') : f.me ? myAvatar('sm') : `<div class="avatar sm" style="background:var(--surface-2);color:var(--ink)">${'<i class="ph ph-' + (f.ic || 'plant') + '" aria-hidden="true"></i>'}</div>`}
+      <div><div>${f.txt}</div><div class="t">${f.t}</div></div>
+    </div>`).join('');
+
+  const suggs = EDUCATORS.filter(e => !me.connections.includes(e.name)).slice(0, 4);
+  document.getElementById('suggs').innerHTML = suggs.length ? suggs.map(e => `
+    <div class="sugg">
+      ${avatarHTML({ img: e.img, name: e.name }, 'sm')}
+      <div class="sugg-info"><b>${esc(e.name)}</b><small>${esc(e.role)} · ${esc(e.county)}</small></div>
+      <button class="btn-mini" onclick="toggleConnect('${e.name.replace(/'/g, "\\'")}')">Connect</button>
+    </div>`).join('') : '<p style="font-size:0.85rem;color:var(--ink-soft)">You\'re connected with everyone already.</p>';
+}
+function myName() { return `${me.first} ${me.last}`; }
+
+/* ================= DIRECTORY ================= */
+const DIR_FILTERS = ['All', 'Teacher', 'Tutor', 'Parent'];
+function renderDirFilters() {
+  document.getElementById('dirFilters').innerHTML = DIR_FILTERS.map(f =>
+    `<button class="chip ${f === dirFilter ? 'active' : ''}" onclick="dirFilter='${f}';renderDirectory()">${f === 'All' ? 'Everyone' : f + 's'}</button>`).join('');
+}
+function renderDirectory() {
+  renderDirFilters();
+  const q = (document.getElementById('dirSearch').value || '').trim().toLowerCase();
+  const list = EDUCATORS.filter(e =>
+    (dirFilter === 'All' || e.type === dirFilter) &&
+    (!q || [e.name, e.role, e.county, ...e.tags].join(' ').toLowerCase().includes(q)));
+  document.getElementById('dirEmpty').style.display = list.length ? 'none' : 'block';
+  document.getElementById('dirGrid').innerHTML = list.map(e => {
+    const on = me.connections.includes(e.name);
+    return `
+    <article class="t-card">
+      <div class="t-photo">
+        <img src="${e.img}" alt="Portrait of ${esc(e.name)}" loading="lazy">
+        <span class="t-badge"><i class="ph ph-map-pin" aria-hidden="true"></i>${esc(e.county)}</span>
+      </div>
+      <div class="t-body">
+        <div class="t-name">${esc(e.name)}</div>
+        <div class="t-role">${esc(e.role)} · <i class="ph-fill ph-star" aria-hidden="true"></i> ${e.rating.toFixed(1)}</div>
+        <div>${e.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
+        <div class="t-actions">
+          <button class="btn-mini ${on ? 'on' : ''}" onclick="toggleConnect('${e.name.replace(/'/g, "\\'")}')">${on ? '✓ Connected' : 'Connect'}</button>
+          <button class="btn-mini" onclick="messageEducator('${e.name.replace(/'/g, "\\'")}')">Message</button>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+}
+function toggleConnect(name) {
+  const i = me.connections.indexOf(name);
+  if (i >= 0) { me.connections.splice(i, 1); toast(`Removed connection with ${name}`); }
+  else { me.connections.push(name); toast(`You're now connected with ${name}`); }
+  saveUsers();
+  if (currentView === 'educators') renderDirectory();
+  if (currentView === 'home') renderHome();
+  if (currentView === 'profile') renderProfile();
+}
+function messageEducator(name) {
+  const e = EDUCATORS.find(x => x.name === name);
+  let t = me.threads.find(x => x.name === name);
+  if (!t) {
+    t = { id: 't' + Math.random().toString(36).slice(2, 8), name: e.name, role: e.role, img: e.img, unread: false,
+      msgs: [{ who: 'in', txt: `Hi! I'm ${e.name}, ${e.role} in ${e.county}. How can I help?`, t: Date.now() }] };
+    me.threads.unshift(t);
+    saveUsers();
+  }
+  activeThread = t.id;
+  go('messages');
+}
+
+/* ================= MESSAGES ================= */
+function renderMessages() {
+  if (!activeThread || !me.threads.some(t => t.id === activeThread)) activeThread = me.threads[0]?.id || null;
+  renderThreads(); renderChat();
+}
+function renderThreads() {
+  document.getElementById('threadList').innerHTML = me.threads.map(t => `
+    <div class="thread ${t.id === activeThread ? 'active' : ''}" onclick="openThread('${t.id}')">
+      ${avatarHTML(t, 'sm')}
+      <div class="thread-info"><b>${esc(t.name)}</b><small>${esc(t.msgs[t.msgs.length-1]?.txt || '')}</small></div>
+      ${t.unread && t.id !== activeThread ? '<div class="dot"></div>' : ''}
+    </div>`).join('');
+}
+function openThread(id) {
+  activeThread = id;
+  const t = me.threads.find(x => x.id === id);
+  if (t) { t.unread = false; saveUsers(); }
+  renderThreads(); renderChat(); renderShell();
+}
+function fmtTime(ts) {
+  return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+function renderChat() {
+  const main = document.getElementById('chatMain');
+  const t = me.threads.find(x => x.id === activeThread);
+  if (!t) {
+    main.innerHTML = `<div class="chat-empty"><i class="ph ph-chat-circle-dots" style="font-size:2rem" aria-hidden="true"></i>No conversations yet.<br>Connect with an educator to start chatting.</div>`;
+    return;
+  }
+  t.unread = false;
+  main.innerHTML = `
+    <div class="chat-top">
+      ${avatarHTML(t, 'sm')}
+      <div><b>${esc(t.name)}</b><small>${esc(t.role)}</small></div>
+    </div>
+    <div class="chat-body" id="chatBody">
+      ${t.msgs.map(m => `<div class="bubble ${m.who}">${esc(m.txt)}<span class="bt">${fmtTime(m.t)}</span></div>`).join('')}
+    </div>
+    <div class="chat-inbar">
+      <input class="chat-input" id="chatInput" type="text" placeholder="Write a message…" onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="chat-send" onclick="sendMsg()" aria-label="Send"><i class="ph ph-paper-plane-right" aria-hidden="true"></i></button>
+    </div>`;
+  const body = document.getElementById('chatBody');
+  body.scrollTop = body.scrollHeight;
+}
+function sendMsg() {
+  const input = document.getElementById('chatInput');
+  const txt = input.value.trim();
+  if (!txt) return;
+  const t = me.threads.find(x => x.id === activeThread);
+  t.msgs.push({ who: 'out', txt, t: Date.now() });
+  saveUsers();
+  renderChat(); renderThreads();
+  const body = document.getElementById('chatBody');
+  const typing = document.createElement('div');
+  typing.className = 'bubble in typing'; typing.innerHTML = '<i></i><i></i><i></i>';
+  setTimeout(() => { if (currentView === 'messages') { body.appendChild(typing); body.scrollTop = body.scrollHeight; } }, 500);
+  setTimeout(() => {
+    typing.remove();
+    t.msgs.push({ who: 'in', txt: REPLIES[replyIdx++ % REPLIES.length], t: Date.now() });
+    t.unread = currentView !== 'messages' || activeThread !== t.id;
+    saveUsers();
+    if (currentView === 'messages') { renderChat(); renderThreads(); }
+    renderShell();
+  }, 1900);
+}
+
+/* ================= RESOURCES ================= */
+function allResources() { return [...store.get('resources', []), ...SEED_RESOURCES]; }
+function renderResources() {
+  document.getElementById('resFilters').innerHTML = RES_CATS.map(c =>
+    `<button class="chip ${c === resFilter ? 'active' : ''}" onclick="resFilter='${c}';renderResources()">${c}</button>`).join('');
+  const list = allResources().filter(r => resFilter === 'All' || r.cat === resFilter);
+  document.getElementById('resGrid').innerHTML = list.map(r => `
+    <article class="res-card">
+      <img src="${r.img}" alt="${esc(r.title)}" loading="lazy">
+      <div class="res-body">
+        <div class="res-type">${esc(r.cat)} · ${esc(r.badge)}</div>
+        <div class="res-title">${esc(r.title)}</div>
+        <div class="res-desc">${esc(r.desc)}</div>
+        <div class="res-foot">
+          <span>by ${r.by === myName() ? 'you' : esc(r.by)}</span>
+          <button class="res-dl-btn" onclick="downloadRes('${r.id}')"><i class="ph ph-download-simple" aria-hidden="true"></i> ${r.dl}</button>
+        </div>
+      </div>
+    </article>`).join('');
+}
+function downloadRes(id) {
+  const community = store.get('resources', []);
+  let r = community.find(x => x.id === id) || SEED_RESOURCES.find(x => x.id === id);
+  if (!r) return;
+  r.dl++;
+  if (community.some(x => x.id === id)) store.set('resources', community);
+  toast(`Downloading “${r.title}”`);
+  renderResources();
+}
+function openResModal() { document.getElementById('resModal').classList.add('open'); }
+function closeResModal() { document.getElementById('resModal').classList.remove('open'); }
+function postResource(e) {
+  e.preventDefault();
+  const cat = document.getElementById('rCat').value;
+  const community = store.get('resources', []);
+  community.push({
+    id: 'c' + Math.random().toString(36).slice(2, 8),
+    cat, title: document.getElementById('rTitle').value.trim(),
+    desc: document.getElementById('rDesc').value.trim(),
+    badge: document.getElementById('rBadge').value,
+    by: myName(), dl: 0, img: RES_IMGS[cat],
+  });
+  store.set('resources', community);
+  e.target.reset();
+  closeResModal();
+  toast('Resource published. Thank you for contributing!');
+  renderResources();
+}
+
+/* ================= JOBS ================= */
+function renderJobs() {
+  document.getElementById('jobFilters').innerHTML = JOB_FILTERS.map(f =>
+    `<button class="chip ${f === jobFilter ? 'active' : ''}" onclick="jobFilter='${f}';renderJobs()">${f}</button>`).join('');
+  const list = JOBS.filter(j => jobFilter === 'All' || j.loc === jobFilter || j.kind === jobFilter);
+  document.getElementById('jobList').innerHTML = list.map(j => {
+    const on = me.applied.includes(j.title);
+    return `
+    <div class="job-item">
+      <div class="job-left">
+        <div class="job-ic"><i class="ph ph-${j.icon}" aria-hidden="true"></i></div>
+        <div>
+          <div class="job-title">${esc(j.title)}</div>
+          <div class="job-meta"><span class="loc"><i class="ph ph-map-pin" aria-hidden="true"></i> ${esc(j.loc)}</span> · ${esc(j.kind)}</div>
+        </div>
+      </div>
+      <div class="job-right">
+        <div class="job-pay">${esc(j.pay)}<small>${esc(j.per)}</small></div>
+        <button class="btn-mini ${on ? 'on' : ''}" onclick="applyJob('${j.title.replace(/'/g, "\\'")}')">${on ? '✓ Applied' : 'Apply'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function applyJob(title) {
+  const i = me.applied.indexOf(title);
+  if (i >= 0) { me.applied.splice(i, 1); toast('Application withdrawn'); }
+  else { me.applied.push(title); toast(`Applied to ${title}`); }
+  saveUsers();
+  if (currentView === 'jobs') renderJobs();
+  if (currentView === 'profile') renderProfile();
+}
+
+/* ================= PROFILE ================= */
+function renderProfile() {
+  document.getElementById('profAvatar').outerHTML = myAvatar('lg').replace('class="avatar', 'id="profAvatar" class="avatar');
+  document.getElementById('profName').textContent = myName();
+  document.getElementById('profMeta').textContent = `${me.role} in ${me.county} · Member since ${me.joined}`;
+  document.getElementById('pfCounty').value = me.county;
+  document.getElementById('pfSubjects').value = me.subjects;
+  document.getElementById('pfGrades').value = me.grades;
+  document.getElementById('pfBio').value = me.bio;
+  document.getElementById('pfSubjectsLbl').textContent = me.role === 'Parent' ? "Child's interests" : 'Subjects';
+  document.getElementById('pfPhotoPrev').innerHTML = myAvatar('lg');
+  document.getElementById('pfPhotoRemove').style.display = me.photo ? '' : 'none';
+  renderVerification();
+
+  document.getElementById('connCount').textContent = me.connections.length;
+  document.getElementById('connList').innerHTML = me.connections.length ? me.connections.map(n => {
+    const e = EDUCATORS.find(x => x.name === n);
+    return `<div class="sugg">
+      ${avatarHTML({ img: e?.img, name: n }, 'sm')}
+      <div class="sugg-info"><b>${esc(n)}</b><small>${esc(e?.role || '')}</small></div>
+      <button class="btn-mini" onclick="messageEducator('${n.replace(/'/g, "\\'")}')">Message</button>
+    </div>`;
+  }).join('') : '<p style="font-size:0.83rem;color:var(--ink-soft)">No connections yet. <a style="cursor:pointer;color:var(--clay)" onclick="go(\'educators\')">find educators</a>.</p>';
+
+  document.getElementById('appCount').textContent = me.applied.length;
+  document.getElementById('appList').innerHTML = me.applied.length ? me.applied.map(t => {
+    const j = JOBS.find(x => x.title === t);
+    return `<div class="sugg">
+      <div class="avatar sm" style="background:var(--surface-2);color:var(--ink)"><i class="ph ph-${j?.icon || 'briefcase'}" aria-hidden="true"></i></div>
+      <div class="sugg-info"><b>${esc(t)}</b><small>${esc(j?.loc || '')} · ${esc(j?.kind || '')}</small></div>
+      <button class="btn-mini" onclick="applyJob('${t.replace(/'/g, "\\'")}')">Withdraw</button>
+    </div>`;
+  }).join('') : '<p style="font-size:0.83rem;color:var(--ink-soft)">No applications yet. <a style="cursor:pointer;color:var(--clay)" onclick="go(\'jobs\')">browse jobs</a>.</p>';
+}
+function saveProfile(e) {
+  e.preventDefault();
+  me.county = document.getElementById('pfCounty').value;
+  me.subjects = document.getElementById('pfSubjects').value.trim();
+  me.grades = document.getElementById('pfGrades').value;
+  me.bio = document.getElementById('pfBio').value.trim();
+  saveUsers();
+  toast('Profile saved');
+  renderProfile();
+}
+
+/* ================= PHOTO & VERIFICATION ================= */
+const TSC_PORTAL = 'https://tsconline.tsc.go.ke/register/registration-status';
+const DCI_PORTAL = 'https://dci.ecitizen.go.ke/verify';
+
+async function uploadPhoto(input) {
+  const f = input.files[0]; input.value = '';
+  if (!f) return;
+  if (!f.type.startsWith('image/')) return toast('Please choose an image file (JPG or PNG).');
+  try {
+    const { dataUrl, sizeKB, origKB } = await compressImage(f, 512, 120);
+    const prev = me.photo;
+    me.photo = dataUrl;
+    if (!saveUsers()) { me.photo = prev; return toast('Storage on this device is full — photo not saved.'); }
+    renderShell(); renderProfile();
+    toast(`Photo saved · ${fmtKB(origKB)} compressed to ${fmtKB(sizeKB)}`);
+  } catch { toast('Could not read that image. Try a different one.'); }
+}
+function removePhoto() {
+  me.photo = null; saveUsers(); renderShell(); renderProfile();
+}
+
+async function uploadConduct(input) {
+  const f = input.files[0]; input.value = '';
+  if (!f) return;
+  const origKB = f.size / 1024;
+  const prev = me.conduct;
+  try {
+    if (f.type === 'application/pdf') {
+      if (f.size > 600 * 1024) return toast('That PDF is over 600 KB. Upload a clear photo of the certificate instead — photos get compressed automatically.');
+      me.conduct = { file: await fileToDataURL(f), fname: f.name, sizeKB: origKB, origKB, kind: 'pdf', status: 'uploaded', checked: null };
+    } else if (f.type.startsWith('image/')) {
+      const { dataUrl, sizeKB } = await compressImage(f, 1400, 350);
+      me.conduct = { file: dataUrl, fname: f.name, sizeKB, origKB, kind: 'img', status: 'uploaded', checked: null };
+    } else {
+      return toast('Upload a PDF or a photo of the certificate.');
+    }
+    if (!saveUsers()) { me.conduct = prev; return toast('Storage on this device is full — document not saved.'); }
+    toast(me.conduct.kind === 'img'
+      ? `Certificate saved · ${fmtKB(origKB)} compressed to ${fmtKB(me.conduct.sizeKB)}`
+      : 'Certificate saved.');
+    renderProfile();
+  } catch { toast('Could not read that file. Try again.'); }
+}
+function removeConduct() {
+  me.conduct = { file: null, fname: '', sizeKB: 0, origKB: 0, kind: '', status: 'none', checked: null };
+  saveUsers(); renderProfile();
+}
+
+function saveTsc() {
+  const n = document.getElementById('vTscNum').value.trim();
+  if (!/^\d{4,8}$/.test(n)) return toast('A TSC number is 4 to 8 digits.');
+  me.tsc = { number: n, status: 'saved', checked: null };
+  saveUsers(); renderProfile();
+  toast('TSC number saved. Now confirm it on the TSC portal.');
+}
+function markChecked(kind) {
+  const today = new Date().toISOString().slice(0, 10);
+  if (kind === 'tsc') me.tsc = { ...me.tsc, status: 'checked', checked: today };
+  else me.conduct = { ...me.conduct, status: 'checked', checked: today };
+  saveUsers(); renderProfile();
+  toast('Marked as confirmed. Asante!');
+}
+
+function vchip(label, status) {
+  const txt = w => label ? `${label} ${w.toLowerCase()}` : w;
+  if (status === 'checked') return `<span class="vchip ok"><i class="ph-fill ph-seal-check" aria-hidden="true"></i>${txt('Confirmed')}</span>`;
+  if (status === 'saved' || status === 'uploaded') return `<span class="vchip pend"><i class="ph ph-clock" aria-hidden="true"></i>${txt('Pending')}</span>`;
+  return `<span class="vchip none">${txt('Not added')}</span>`;
+}
+
+function renderVerification() {
+  const panel = document.getElementById('verifyPanel');
+  const isEducator = me.role !== 'Parent';
+  document.getElementById('profChips').innerHTML = isEducator
+    ? vchip('TSC', me.tsc.status) + vchip('Good conduct', me.conduct.status)
+    : '';
+  panel.style.display = isEducator ? '' : 'none';
+  if (!isEducator) return;
+
+  const t = me.tsc, c = me.conduct;
+  const tscBody = t.number
+    ? `<div class="vdoc">
+        <div class="ic-doc"><i class="ph ph-identification-badge" aria-hidden="true"></i></div>
+        <div class="vdoc-info"><b>TSC No. ${esc(t.number)}</b>
+          <span class="vsize">${t.status === 'checked' ? 'Confirmed on ' + t.checked : 'Awaiting your confirmation'}</span></div>
+        <button class="btn-mini" onclick="me.tsc={number:'',status:'none',checked:null};saveUsers();renderProfile()">Change</button>
+      </div>
+      ${t.status !== 'checked' ? `<div class="vrow">
+        <a class="btn-mini" href="${TSC_PORTAL}" target="_blank" rel="noopener">Check status on TSC portal <i class="ph ph-arrow-square-out" aria-hidden="true"></i></a>
+        <button class="btn-mini" onclick="markChecked('tsc')">It matches — confirm</button>
+      </div>` : ''}`
+    : `<div class="vrow">
+        <input type="text" id="vTscNum" inputmode="numeric" placeholder="e.g. 654321" style="flex:1;min-width:140px;margin:0">
+        <button class="btn-mini" onclick="saveTsc()">Save</button>
+      </div>`;
+
+  const conductBody = c.file
+    ? `<div class="vdoc">
+        ${c.kind === 'img' ? `<img src="${c.file}" alt="Certificate of good conduct">` : `<div class="ic-doc"><i class="ph ph-file-pdf" aria-hidden="true"></i></div>`}
+        <div class="vdoc-info"><b>${esc(c.fname)}</b>
+          <span class="vsize">${c.origKB > c.sizeKB + 1 ? esc(fmtKB(c.origKB)) + ' → ' : ''}${esc(fmtKB(c.sizeKB))}${c.status === 'checked' ? ' · confirmed ' + c.checked : ''}</span></div>
+        <button class="btn-mini" onclick="removeConduct()">Remove</button>
+      </div>
+      ${c.status !== 'checked' ? `<div class="vrow">
+        <a class="btn-mini" href="${DCI_PORTAL}" target="_blank" rel="noopener">Verify on DCI eCitizen <i class="ph ph-arrow-square-out" aria-hidden="true"></i></a>
+        <button class="btn-mini" onclick="markChecked('conduct')">It's valid — confirm</button>
+      </div>` : ''}`
+    : `<div class="vrow">
+        <span class="btn-mini btn-file">Upload certificate<input type="file" accept="image/*,.pdf,application/pdf" onchange="uploadConduct(this)"></span>
+      </div>`;
+
+  panel.innerHTML = `
+    <h3>Verification</h3>
+    <p class="vhint" style="margin-top:0">Verified profiles earn more trust from parents and schools. Files are compressed and stored only on this device.</p>
+    <div class="vblock">
+      <h4>TSC number ${vchip('', t.status)}</h4>
+      ${tscBody}
+      <p class="vhint">EduBridge cannot query TSC records automatically — confirm your registration status on the official portal, then mark it here.</p>
+    </div>
+    <div class="vblock">
+      <h4>Certificate of good conduct ${vchip('', c.status)}</h4>
+      ${conductBody}
+      <p class="vhint">Upload a photo or PDF of your police clearance certificate, then verify its reference number on the official DCI eCitizen page.</p>
+    </div>`;
+}
+
+/* ================= BOOT ================= */
+addEventListener('keydown', e => { if (e.key === 'Escape') closeResModal(); });
+
+function pendingFromHash() {
+  const m = location.hash.match(/^#join=(.+)$/);
+  if (!m) return null;
+  history.replaceState(null, '', location.pathname); // scrub credentials from URL/history
+  try { return JSON.parse(decodeURIComponent(escape(atob(m[1])))); } catch { return null; }
+}
+function consumePendingSignup() {
+  // account handoff from the landing page modal (hash first, storage as fallback)
+  const pending = pendingFromHash() || store.get('pendingSignup', null);
+  if (!pending || !pending.email) return false;
+  store.del('pendingSignup');
+  let user = users.find(u => u.email === pending.email);
+  const isNew = !user;
+  if (isNew) { user = makeUser(pending); users.push(user); store.set('users', users); }
+  store.set('session', user.id);
+  enterApp(user, isNew);
+  return true;
+}
+
+(function boot() {
+  if (consumePendingSignup()) return;
+  const sessionId = store.get('session', null);
+  const user = users.find(u => u.id === sessionId);
+  if (user) return enterApp(user, false);
+  document.getElementById('authView').classList.add('on');
+  showAuth(location.hash === '#signup' ? 'signup' : 'login');
+  // localStorage writes from the landing page can land a beat late
+  // (notably on file:// origins); re-check briefly before giving up.
+  let tries = 0;
+  const poll = setInterval(() => {
+    users = store.get('users', users);
+    if (me || ++tries > 10 || consumePendingSignup()) clearInterval(poll);
+  }, 150);
+})();
+</script>
+</body>
+</html>
